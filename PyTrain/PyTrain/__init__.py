@@ -1,5 +1,5 @@
 from .utilities import *
 from .logger import *
 
-from .metrics import ClassificationMetrics
+from .metrics import BaseMetrics, ClassificationMetrics
 from .model import Model
