@@ -39,8 +39,6 @@ class Network(nn.Module):
         x = self.fc3(x)
         return x
 
-network = Network()
-
 '''
     TRAINER
 '''
