@@ -52,7 +52,7 @@ network = Network()
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(network.parameters(), lr=0.001)
 
-model = Model(network, criterion, optimizer, ClassificationMetrics())
+model = Model(network, criterion, optimizer, None, ClassificationMetrics())
 st, sv = model.train(trainloader, testloader, epochs=4, max_steps=10, logger=BaseLogger())
 
 print('Train', st)
