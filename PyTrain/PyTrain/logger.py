@@ -4,10 +4,11 @@ class BaseLogger():
     def __init__(self):
         pass
 
-    def log(self, epoch, phase, values):
-        ts = F'{datetime.datetime.now().time()}'[:8]
+    def log(self, epoch, values, phase):
         if phase == 'train':
-            print(epoch, ts, 'train:', values, sep='\t', end='\t')
+            print(epoch, 'train:', values, sep='\t', end='\t')
         elif phase == 'valid':
             print('|', 'valid:', values, sep='\t')
+        elif phase == 'eval':
+            print(values, sep='\t')
 

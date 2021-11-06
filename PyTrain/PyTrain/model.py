@@ -28,9 +28,9 @@ class Model():
                 loss, dz, dy = self._optimize(x, y)
                 metrics.update(loss, dz, dy)
                 if step == max_steps: break
-            accuracy = metrics.commit()
+            accuracy = metrics.commit(epoch)
             summary_train.register(epoch, loss.item(), accuracy, metrics.values)
-            if not logger is None: logger.log(epoch, 'train', str(metrics))
+            if not logger is None: logger.log(epoch, str(metrics), 'train')
 
             self.network.eval()
             metrics.begin()
@@ -39,9 +39,11 @@ class Model():
                     loss, dz, dy = self._validate(x, y)
                     metrics.update(loss, dz, dy)
                     if step == max_steps: break
-                accuracy = metrics.commit()
+                accuracy = metrics.commit(epoch)
                 summary_valid.register(epoch, loss.item(), accuracy, metrics.values)
-                if not logger is None: logger.log(epoch, 'valid', str(metrics))
+                if not logger is None: logger.log(epoch, str(metrics), 'valid')
+
+        return summary_train, summary_valid
 
     def predict(self, datasource):
         self.network.eval()

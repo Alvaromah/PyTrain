@@ -21,27 +21,27 @@ class Summary():
             return True
         return False
 
-    def hash(self):
+    def __str__(self):
         def r4(v): return "{:6.4f}".format(v)
-        return F'{self.epoch:02}-{r4(self.accy).strip()}'
+        return F'best epoch: {self.epoch}\tloss:\t{r4(self.loss)}\taccy:\t{r4(self.accuracy)}'
     
 class BaseMetrics():
     def __init__(self):
         self.loss = None
         self.preds = None
-        self.targets = None
+        self.targs = None
         self.values = None
 
     def begin(self):
         self.loss = []
         self.preds = []
-        self.targets = []
+        self.targs = []
         self.values = None
 
     def update(self, loss, dz, dy):
         self.loss.append(self._get_loss(loss))
         self.preds.append(self._get_preds(dz))
-        self.targets.append(self._get_targets(dy))
+        self.targs.append(self._get_targets(dy))
 
     def _get_loss(self, loss):
         return loss.item()
@@ -52,12 +52,12 @@ class BaseMetrics():
     def _get_targets(self, dy):
         return dy.detach().cpu().numpy()
 
-    def commit(self):
+    def commit(self, epoch):
         loss = np.mean(self.loss)
         accuracy = 0.0
         self.values = {
-                'loss': 0.0,
-                'accuracy': 0.0
+                'loss': loss,
+                'accuracy': accuracy
             }
         return accuracy
 
@@ -73,13 +73,48 @@ class ClassificationMetrics(BaseMetrics):
     def _get_targets(self, dy):
         return dy.detach().cpu().numpy()
 
-    def commit(self):
-        preds = np.concatenate(self.preds)
-        targets = np.concatenate(self.targets)
+    def commit(self, epoch):
         loss = np.mean(self.loss)
-        accuracy = sum(preds == targets) / len(preds)
+        preds = np.concatenate(self.preds)
+        targs = np.concatenate(self.targs)
+        accuracy = sum(preds == targs) / len(preds)
         self.values = {
                 'loss': loss,
                 'accuracy': accuracy
             }
         return accuracy
+
+class CrossEntropyMetrics(BaseMetrics):
+    def commit(self, epoch):
+        loss = np.mean(self.loss)
+        preds = np.concatenate(self.preds, axis=0)
+        targs = np.concatenate(self.targs, axis=0)
+
+        preds = preds.argmax(axis=1)
+        targs = targs.argmax(axis=1)
+        preds = preds.reshape(preds.shape[0], -1)
+        targs = targs.reshape(targs.shape[0], -1)
+        accuracy = (sum(preds == targs) / len(preds)).mean()
+
+        self.values = {
+                'loss': loss,
+                'accuracy': accuracy
+            }
+        return accuracy
+
+class RMSEMetrics(BaseMetrics):
+    def commit(self, epoch):
+        loss = np.mean(self.loss)
+        preds = np.concatenate(self.preds, axis=0)
+        targs = np.concatenate(self.targs, axis=0)
+
+        preds = preds.reshape(preds.shape[0], -1)
+        targs = targs.reshape(targs.shape[0], -1)
+        accuracy = np.sqrt(np.mean((targs - preds) ** 2)) * 100
+
+        self.values = {
+                'loss': loss,
+                'accuracy': accuracy
+            }
+        return accuracy
+

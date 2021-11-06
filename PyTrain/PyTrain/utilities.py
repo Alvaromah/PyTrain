@@ -1,7 +1,6 @@
 import pickle
 import random
 import numpy as np
-import matplotlib.pyplot as plt
 
 import torch
 
@@ -32,9 +31,3 @@ def create_tensor(x, shape):
         x = np.array(x)
     x = x.reshape(shape).astype(np.float32)
     return torch.from_numpy(x)
-
-def imshow(img):
-    img = img / 2 + 0.5     # unnormalize
-    npimg = img.numpy()
-    plt.imshow(np.transpose(npimg, (1, 2, 0)))
-    plt.show()
