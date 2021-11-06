@@ -31,7 +31,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="data\" />
     <Folder Include="PyTrain\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="data\cifar-10-python.tar.gz" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
