@@ -1,4 +1,4 @@
-VERSION = 'v0.02'
+VERSION = 'v0.03'
 
 def version():
     print(F'PyTrain {VERSION}')

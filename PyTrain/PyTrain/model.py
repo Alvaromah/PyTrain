@@ -55,7 +55,7 @@ class Model():
         self.network.eval()
         with torch.no_grad():
             preds = []
-            for step, (x, y) in enumerate(dataloader):
+            for step, (id, x, y) in enumerate(dataloader):
                 dz = self._forward(x)
                 z = dz.detach().cpu().numpy()
                 preds.append(z)
@@ -87,10 +87,10 @@ class Model():
         dz = self.network(dx)
         return dz
 
-    def _device(self, x):
-        if isinstance(x, list):
-            for n in len(x):
-                x[n] = self._device(x[n])
+    def _device(self, t):
+        if isinstance(t, list):
+            for n in range(len(t)):
+                t[n] = self._device(t[n])              
         else:
-            x = x.to(DEVICE)
-        return x
+            t = t.to(DEVICE)
+        return t
