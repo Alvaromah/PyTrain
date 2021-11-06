@@ -2,6 +2,10 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 
+from PyTrain import *
+
+version()
+
 '''
     Data
 '''
@@ -43,14 +47,14 @@ class Network(nn.Module):
     TRAINER
 '''
 import torch.optim as optim
-from PyTrain import Model, ClassificationMetrics, BaseLogger
 
 network = Network()
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(network.parameters(), lr=0.001)
 
 model = Model(network, criterion, optimizer, ClassificationMetrics())
-t, v = model.train(trainloader, testloader, epochs=4, max_steps=10, logger=BaseLogger())
+st, sv = model.train(trainloader, testloader, epochs=4, max_steps=10, logger=BaseLogger())
 
-print(t)
-print(v)
+print('Train', st)
+print('Valid', sv)
+

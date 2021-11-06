@@ -25,6 +25,7 @@
     <Compile Include="PyTrain\logger.py" />
     <Compile Include="PyTrain\metrics.py" />
     <Compile Include="PyTrain\model.py" />
+    <Compile Include="PyTrain\version.py" />
     <Compile Include="PyTrain\utilities.py" />
     <Compile Include="PyTrain\__init__.py">
       <SubType>Code</SubType>
